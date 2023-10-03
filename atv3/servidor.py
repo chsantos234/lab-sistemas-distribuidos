@@ -29,11 +29,10 @@ class Server:
                     p = receive.split('.') 
 
                     if p[0] == "info":
-                        if p[1] == "function list":
+                        if p[1] == "function_list":
                             keys = list(self.methods.keys())
-                            send = ', '.join(keys)
-                        
-                        if p[1] == "desc":
+                            send = ', '.join(keys) 
+                        elif p[1] == "desc":
                             method = self.methods[p[2]]
                             send = method.__doc__
                         else:

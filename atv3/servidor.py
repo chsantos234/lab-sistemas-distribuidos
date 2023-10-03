@@ -28,14 +28,26 @@ class Server:
                     receive = clientSocket.recv(1024).decode('utf-8')
                     p = receive.split('.') 
 
-                    if p[0] == "function list":
-                        keys = list(self.methods.keys())
-                        send = ', '.join(keys)
+                    if p[0] == "info":
+                        if p[1] == "function list":
+                            keys = list(self.methods.keys())
+                            send = ', '.join(keys)
+                        
+                        if p[1] == "desc":
+                            method = self.methods[p[2]]
+                            send = method.__doc__
+                        else:
+                            raise KeyError
+                        
                         clientSocket.sendall(str(send).encode('utf-8'))
                         continue
-                    
-                    send = self.methods[p[0]](int(p[1])) # melhorar para mais de 1 parâmetro
-                                                         # quebra alguns tratamentos de erro.
+
+                    method = self.methods[p[0]]
+
+                    if len(p) == 2:
+                        send = method[p[0]](int(p[1]))
+                    if len(p) == 3:
+                        send = method[p[0]](int(p[1]),int(p[2]))
 
                 except KeyboardInterrupt:
                     print(f"servidor {self.address} interrompido")
@@ -46,6 +58,8 @@ class Server:
                     send = "Comando desconhecido"
                 except ValueError:
                     send = "Valor inválido para número inteiro"
+                except TypeError:
+                    send = "Número de parâmetros não condiz com a função chamada"
                 except ConnectionAbortedError:
                     print("Uma conexão estabelecida foi anulada pelo software no computador host")
                     s.close()

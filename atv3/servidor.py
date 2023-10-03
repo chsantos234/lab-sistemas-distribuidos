@@ -10,12 +10,9 @@ class Server:
         self.address = (host,port)
         self.methods = {}
 
-    #def register_method(self, function):
-    #    self.method.update({function.__name__:function})
-
     def register_instance(self, instance):
         for funcName,function in inspect.getmembers(instance, predicate=inspect.ismethod):
-            if not funcName.startswith('__'):
+            if not funcName.startswith('__') and not funcName.startswith('sup'):
                 self.methods.update({funcName: function})
 
     def run(self):
@@ -24,25 +21,36 @@ class Server:
             s.listen(1)
 
             print(f"servidor {self.address} ativo.")
-
+            clientSocket, clientAddres = s.accept()
+            print(f"conexão com:\n{clientSocket}\n{clientAddres}")
             while True:
                 try:
-                    clientSocket, clientAddres = s.accept()
-                    print(f"conexão com:\n{clientSocket}\n{clientAddres}")
-
                     receive = clientSocket.recv(1024).decode('utf-8')
-                    p = receive.split(';')
-                    send = self.methods[p[0]](int(p[1]),int(p[2])) # erro
-                    clientSocket.sendall(str(send).encode('utf-8'))
+                    p = receive.split('.') 
+
+                    if p[0] == "function list":
+                        keys = list(self.methods.keys())
+                        send = ', '.join(keys)
+                        clientSocket.sendall(str(send).encode('utf-8'))
+                        continue
+                    
+                    send = self.methods[p[0]](int(p[1])) # melhorar para mais de 1 parâmetro
+                                                         # quebra alguns tratamentos de erro.
 
                 except KeyboardInterrupt:
                     print(f"servidor {self.address} interrompido")
                     break
-                #except Exception as e:
-                #    print(f"Erro: {e}")
-                #    break
-                #finally:
-                #    s.close()
+                except IndexError:
+                    send = "Parâmetros estão faltando"
+                except KeyError:
+                    send = "Comando desconhecido"
+                except ValueError:
+                    send = "Valor inválido para número inteiro"
+                except ConnectionAbortedError:
+                    print("Uma conexão estabelecida foi anulada pelo software no computador host")
+                    s.close()
+                    break
+                clientSocket.sendall(str(send).encode('utf-8'))
                     
                     
 def main():

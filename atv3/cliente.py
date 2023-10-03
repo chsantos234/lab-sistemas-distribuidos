@@ -36,7 +36,7 @@ def main():
             client.clientSocket.sendall(bytes(send,'utf-8'))
             receive = client.clientSocket.recv(1024)
 
-            print(receive.decode('utf-8'))
+            print(receive.decode('utf-8'),"\n")
         except TimeoutError as e:
             print(e)
         except KeyboardInterrupt:

@@ -15,12 +15,6 @@ class Client:
         except Exception as e:
             print(e)
 
-    def disconnect(self):
-        try:
-            self.sock.close()
-        except Exception as e:
-            print(e)
-
 def main():
     client = Client()
     client.connect()
@@ -40,7 +34,7 @@ def main():
             print(e)
         except KeyboardInterrupt:
             print(f"cliente {client.address} interrompido")
-            client.disconnect()
+            client.sock.close()
             break
 
 if __name__ == "__main__":

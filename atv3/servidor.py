@@ -9,7 +9,7 @@ class Server:
         self.port = port
         self.address = (host,port)
         self.methods = {}
-        self.desc = '''Comandos do servidor:\n\nhelp: descrição das utilidades do servidor.\nf-list: lista de funções.\ndesc,função: descrição de uma função.\nfunção,params: executa função.'''
+        self.desc = "Comandos do servidor:\n\nhelp: descrição das utilidades do servidor.\nf-list: lista de funções.\ndesc,função: descrição de uma função.\nfunção,params: executa função."
 
     def register_instance(self, instance):
         for funcName,function in inspect.getmembers(instance, predicate=inspect.ismethod):
@@ -28,7 +28,6 @@ class Server:
             # para a utilização das funções
             send = self.methods[resp[0]](*resp[1:])
         return send
-
 
     def run(self):
         with socket.socket(socket.AF_INET,socket.SOCK_STREAM) as s:
@@ -58,8 +57,7 @@ class Server:
 
                 # envio da resposta para o socket cliente
                 clientSocket.sendall(str(send).encode('utf-8'))
-                    
-                    
+                      
 def main():
     server = Server()
     inst = Instances()

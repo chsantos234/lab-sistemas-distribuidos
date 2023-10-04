@@ -6,7 +6,11 @@ class Instances:
             return(self.sup_fibonacci(n-1) + self.sup_fibonacci(n-2))
     
     def fibonacci(self,n: int) -> str:
-        """encontra nésimo número da sequência de fibonacci"""
+        """
+        Encontra nésimo número da sequência de fibonacci.
+        Parâmetros:
+        n: número inteiro
+        """
         answer = ''
         for i in range(n+1):
             answer += f"{str(self.sup_fibonacci(i))}"
@@ -14,7 +18,13 @@ class Instances:
         return answer
     
     def prime(self,n:int) -> str:
-        """encontra os números primos até o nésimo número"""
+        if n == 0 or n == 1: return "- "
+        """
+        Encontra os números primos até o nésimo número.
+        Parâmetros: 
+        n: número inteiro
+        
+        """
         answer = ''
         for num in range(2,n+1):
             if all(num%i!=0 for i in range(2,num)):
@@ -22,5 +32,9 @@ class Instances:
         return answer.removesuffix(' - ')
     
     def sum(self,a,b):
-        """soma números"""
+        """
+        Soma dois números.
+        Parâmetros:
+        a,b: números inteiros ou flutuantes
+        """
         return a+b

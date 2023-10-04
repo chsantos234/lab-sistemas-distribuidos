@@ -5,19 +5,19 @@ class Client:
         self.host = host
         self.port = port
         self.address = (host,port)
-        self.clientSocket = None
+        self.sock = None
 
     def connect(self):
         try:
-            self.clientSocket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-            self.clientSocket.settimeout(5.0)
-            self.clientSocket.connect(self.address)
+            self.sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+            self.sock.settimeout(5.0)
+            self.sock.connect(self.address)
         except Exception as e:
             print(e)
 
     def disconnect(self):
         try:
-            self.clientSocket.close()
+            self.sock.close()
         except Exception as e:
             print(e)
 
@@ -33,8 +33,8 @@ def main():
                 client.disconnect()
                 break
 
-            client.clientSocket.sendall(bytes(send,'utf-8'))
-            receive = client.clientSocket.recv(1024)
+            client.sock.sendall(bytes(send,'utf-8'))
+            receive = client.sock.recv(1024)
 
             print(receive.decode('utf-8'),"\n")
         except TimeoutError as e:

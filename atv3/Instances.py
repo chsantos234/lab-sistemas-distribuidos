@@ -23,7 +23,6 @@ class Instances:
         Encontra os números primos até o nésimo número.
         Parâmetros: 
         n: número inteiro
-        
         """
         answer = ''
         for num in range(2,n+1):

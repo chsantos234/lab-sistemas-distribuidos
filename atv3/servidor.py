@@ -17,14 +17,11 @@ class Server:
                 self.methods.update({funcName: function})
 
     def response_handler(self,resp):
-        send = ''
-        
-        # para o retorno de informações das funções
+        # para o retorno de informações extras
         if resp[0] == "f-list":
             send = ', '.join(list(self.methods.keys()))
         elif resp[0] == "desc":
-            method = self.methods[resp[1]]
-            send = method.__doc__
+            send = self.methods[resp[1]].__doc__
         elif resp[0] == 'help':
             send = self.desc
         else:

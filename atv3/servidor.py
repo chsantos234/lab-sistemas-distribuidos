@@ -9,6 +9,7 @@ class Server:
         self.port = port
         self.address = (host,port)
         self.methods = {}
+        self.desc = '''Comandos do servidor:\n\nhelp: descrição das utilidades do servidor.\nf-list: lista de funções.\ndesc,função: descrição de uma função.\nfunção,params: executa função.'''
 
     def register_instance(self, instance):
         for funcName,function in inspect.getmembers(instance, predicate=inspect.ismethod):
@@ -17,24 +18,18 @@ class Server:
 
     def response_handler(self,resp):
         send = ''
-        # para o retorno de informações das funções
-        if resp[0] == "info":
-            if resp[1] == "f-list":
-                send = ', '.join(list(self.methods.keys())) 
-            elif resp[1] == "desc":
-                method = self.methods[resp[2]]
-                send = method.__doc__
-            else:
-                raise KeyError
-            return send
         
-        # para a utilização das funções
-        method = self.methods[resp[0]]
-
-        if len(resp) == 2:
-            send = method(int(resp[1]))
-        elif len(resp) == 3:
-            send = method(int(resp[1]),int(resp[2]))
+        # para o retorno de informações das funções
+        if resp[0] == "f-list":
+            send = ', '.join(list(self.methods.keys()))
+        elif resp[0] == "desc":
+            method = self.methods[resp[1]]
+            send = method.__doc__
+        elif resp[0] == 'help':
+            send = self.desc
+        else:
+            # para a utilização das funções
+            send = self.methods[resp[0]](*resp[1:])
         return send
 
 
@@ -49,9 +44,8 @@ class Server:
 
             while True:
                 try:
-                    resp = clientSocket.recv(1024).decode('utf-8').split('.')
+                    resp = clientSocket.recv(1024).decode('utf-8').split(',')
                     send = self.response_handler(resp)
-                    if send == '': raise ValueError
 
                 # tratamentos de erros com envio de mensagens personalizadas
                 except IndexError:

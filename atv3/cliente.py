@@ -30,8 +30,7 @@ def main():
             send = input('input: ')
 
             if send == 'exit': 
-                client.disconnect()
-                break
+                raise KeyboardInterrupt
 
             client.sock.sendall(bytes(send,'utf-8'))
             receive = client.sock.recv(1024)

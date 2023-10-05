@@ -2,27 +2,34 @@ from Instances import Instances
 import inspect
 import socket
 
-class Server:
 
-    def __init__(self,host = '0.0.0.0',port = 8080):
+class Server:
+    def __init__(self, host="0.0.0.0", port=8080):
         self.host = host
         self.port = port
-        self.address = (host,port)
+        self.address = (host, port)
         self.methods = {}
-        self.desc = "Comandos do servidor:\n\nhelp: descrição das utilidades do servidor.\nf-list: lista de funções.\ndesc,função: descrição de uma função.\nfunção,params: executa função."
+        self.desc = "Comandos do servidor:\n\nhelp: descrição das utilidades do servidor.\
+            \nf-list: lista de funções.\
+            \ndesc,função: descrição de uma função.\
+            \nfunção,params: executa função."
 
     def register_instance(self, instance):
-        for funcName,function in inspect.getmembers(instance, predicate=inspect.ismethod):
-            if not funcName.startswith('__') and not funcName.startswith('sup'):
-                self.methods.update({funcName: function})
+        for func_name, function in inspect.getmembers(
+            instance, predicate=inspect.ismethod
+        ):
+            if not func_name.startswith(
+                "__"
+            ) and not func_name.startswith("sup"):
+                self.methods.update({func_name: function})
 
-    def response_handler(self,resp):
+    def response_handler(self, resp):
         # para o retorno de informações extras
         if resp[0] == "f-list":
-            send = ', '.join(list(self.methods.keys()))
+            send = ", ".join(list(self.methods.keys()))
         elif resp[0] == "desc":
             send = self.methods[resp[1]].__doc__
-        elif resp[0] == 'help':
+        elif resp[0] == "help":
             send = self.desc
         else:
             # para a utilização das funções
@@ -30,34 +37,41 @@ class Server:
         return send
 
     def run(self):
-        with socket.socket(socket.AF_INET,socket.SOCK_STREAM) as s:
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.bind(self.address)
             s.listen(1)
 
             print(f"servidor {self.address} ativo.")
-            clientSocket, clientAddres = s.accept()
-            print(f"conexão com: {clientAddres}")
+            client_socket, client_address = s.accept()
+            print(f"conexão com: {client_address}")
 
             while True:
                 try:
-                    resp = clientSocket.recv(1024).decode('utf-8').split(',')
+                    resp = (
+                        client_socket.recv(1024)
+                        .decode("utf-8")
+                        .split(",")
+                    )
                     send = self.response_handler(resp)
 
-                # tratamentos de erros com envio de mensagens personalizadas
+                # Tratamentos de erros com envio de mensagens personalizadas
                 except IndexError:
                     send = "Parâmetros estão faltando"
                 except KeyError:
                     send = "Comando desconhecido"
-                except (ValueError,TypeError):
-                    send = "Parâmetros de entrada inválidos ou incompletos"
-                except (ConnectionAbortedError,KeyboardInterrupt):
-                    print(f"servidor {self.address} interrompido")
+                except (ValueError, TypeError):
+                    send = (
+                        "Parâmetros de entrada inválidos ou incompletos"
+                    )
+                except (ConnectionAbortedError, KeyboardInterrupt):
+                    print(f"Servidor {self.address} interrompido")
                     s.close()
                     break
 
                 # envio da resposta para o socket cliente
-                clientSocket.sendall(str(send).encode('utf-8'))
-                      
+                client_socket.sendall(str(send).encode("utf-8"))
+
+
 def main():
     server = Server()
     inst = Instances()

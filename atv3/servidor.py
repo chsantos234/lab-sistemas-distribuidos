@@ -48,8 +48,8 @@ class Server:
                     send = "Parâmetros estão faltando"
                 except KeyError:
                     send = "Comando desconhecido"
-                except (ValueError,TypeError):
-                    send = "Parâmetros de entrada inválidos ou incompletos"
+                #except (ValueError,TypeError):
+                #    send = "Parâmetros de entrada inválidos ou incompletos"
                 except (ConnectionAbortedError,KeyboardInterrupt):
                     print(f"servidor {self.address} interrompido")
                     s.close()

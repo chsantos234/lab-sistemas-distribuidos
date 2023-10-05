@@ -18,7 +18,7 @@ class Instances:
             if i != n: answer += " - "
         return answer
     
-    def prime(self,*args:int) -> str:
+    def prime(self,*args: float) -> str:
         """
         Encontra os números primos até o n-ésimo número.
         Parâmetros: 
@@ -32,7 +32,7 @@ class Instances:
                 answer += f"{str(num)} - "
         return answer.removesuffix(' - ')
     
-    def sum(self,*args):
+    def sum(self,*args: float) -> float:
         """
         Retorna a soma de todos os números.
         Parâmetros:
@@ -42,3 +42,12 @@ class Instances:
         for i in args:
             s += float(i)
         return s
+    
+    def mean(self,*args: float) -> float:
+        """
+        Retorma a média aritmética dos valores recebidos.
+        Parâmetros:
+        args: números inteiros ou flutuantes
+        """
+
+        return self.sum(*args)/len(args)

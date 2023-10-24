@@ -1,27 +1,35 @@
-#import itertools
 import Pyro5.api
-import inspect
 
-
-print("Classes:\n- greeting\n- math")
+math_obj = Pyro5.api.Proxy("PYRONAME:example.math")
+greeting_obj = Pyro5.api.Proxy("PYRONAME:example.greeting")
+print('funções do servidor:\n- greetings\n- sum\n- multip')
 
 while True:
-    object_to_use = input("Qual classe a ser usada? ")
     try:
-        if object_to_use == 'exit': raise KeyboardInterrupt
+        function_call = input(':')
+        if function_call == 'exit': raise KeyboardInterrupt
 
-        object_call = Pyro5.api.Proxy("PYRONAME:example."+ object_to_use)
-        
+        elif function_call == 'greetings': 
+            name = input('What is your name? ')
+            print(greeting_obj.get_fortune(name))
 
-        attrs = (getattr(object_call, name) for name in dir(object_call))
-        methods = filter(inspect.ismethod, attrs)
+        elif function_call == 'sum':
+            valores = input('digite os valores a serem somados\n:').split(' ')
+            valores = list(map(lambda x: int(x),valores))
+            print(math_obj.sum(valores))
 
-        for method in methods:
-            value = method()
-            print(value)
+        elif function_call == 'multip':
+            valores = input('digite os valores a serem multiplicados\n:').split(' ')
+            valores = list(map(lambda x: int(x),valores))
+            print(math_obj.mult(valores))
+
+        else:
+            raise ModuleNotFoundError
 
     except KeyboardInterrupt:
         print("finalizando programa:")
         break
-    #except Exception as e:
-    #    print(e)
+    except ModuleNotFoundError:
+        print(f'nenhum módulo com nome de {function_call}')
+    except Exception as e:
+        print(e)

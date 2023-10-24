@@ -3,24 +3,19 @@ from random import randint
 
 # classe da atividade
 @Pyro5.api.expose
-class GreetingMaker(object):
-    def get_fortune(self):
-        name = input('What is your name? ')
+class GreetingMaker():
+    def get_fortune(self,name):
         value = randint(0,10000)
         return f"Hello, {name}. Here is your fortune message:\nTomorrow's lucky number is {value}."
 
 # classe nova adicionada (duas funções)
 @Pyro5.api.expose
-class Math(object):
+class Math():
 
-    def sum():
-        valores = input('digite os valores a serem somados\n:').split(' ')
-        valores = list(map(lambda x: int(x),valores))
+    def sum(self,valores):
         return sum(valores)
     
-    def mult():
-        valores = input('digite os valores a serem multiplicados\n:').split(' ')
-        valores = list(map(lambda x: int(x),valores))
+    def mult(self,valores):
         multi = 1
         for i in valores:
             multi *= i

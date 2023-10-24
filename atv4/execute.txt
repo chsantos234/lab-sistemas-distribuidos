@@ -1,0 +1,7 @@
+to execute RMIServer and RMIClient:
+
+1. python -m Pyro5.nameserver
+2. python RMIServer.py
+3. python RMIClient.py
+
+in three separate terminals.

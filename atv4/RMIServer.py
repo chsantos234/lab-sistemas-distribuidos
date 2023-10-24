@@ -1,31 +1,44 @@
 import Pyro5.api
+from random import randint
 
+# classe da atividade
 @Pyro5.api.expose
 class GreetingMaker(object):
-    def get_fortune(self, name):
-        return "Hello, {0}. Here is your fortune message:\n" \
-                "Tomorrow's lucky number is 12345678.".format(name)
+    def get_fortune(self):
+        name = input('What is your name? ')
+        value = randint(0,10000)
+        return f"Hello, {name}. Here is your fortune message:\nTomorrow's lucky number is {value}."
 
+# classe nova adicionada (duas funções)
 @Pyro5.api.expose
-class SpringBoot(object):
+class Math(object):
 
-    def sum(self,*valores):
-        soma = 0
+    def sum():
+        valores = input('digite os valores a serem somados\n:').split(' ')
+        valores = list(map(lambda x: int(x),valores))
         return sum(valores)
     
-    def mult(self,*valores):
+    def mult():
+        valores = input('digite os valores a serem multiplicados\n:').split(' ')
+        valores = list(map(lambda x: int(x),valores))
         multi = 1
         for i in valores:
             multi *= i
         return multi 
 
 
-daemon = Pyro5.server.Daemon() # make a Pyro daemon
-ns = Pyro5.api.locate_ns() # find the name server
-uri = daemon.register(GreetingMaker) # register the greeting maker as a Pyro object
-uri2 = daemon.register(SpringBoot)
-ns.register("example.greeting", uri) # register the obj with a name in the name server
+daemon = Pyro5.server.Daemon() # Pyro daemon
+ns = Pyro5.api.locate_ns() # Pesquisa do servidor
+
+# registro das classes como objetos Pyro
+uri = daemon.register(GreetingMaker)
+uri2 = daemon.register(Math)
+
+# registro dos objetos com um nome no servidor
+ns.register("example.greeting", uri)
 ns.register("example.math", uri2)
 
 print("Ready.")
-daemon.requestLoop() # start the event loop of the server to wait for calls
+
+# inicializa o loop de eventos do servidor e espera uma conexão
+daemon.requestLoop()

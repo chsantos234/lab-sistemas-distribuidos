@@ -40,10 +40,6 @@ int main(int argc, char** argv){
             }
         }
 
-        //MPI_Recv(&C, block_per_process, MPI_INT, 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-        //MPI_Recv(&C, block_per_process, MPI_INT, 2, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-        //MPI_Recv(&C, block_per_process, MPI_INT, 3, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-
         for(int i = 0; i < m_order / 2; i++){
             for(int j = m_order / 2; j < m_order; j++){
                 MPI_Recv(&C[i][j], 1, MPI_INT, 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);

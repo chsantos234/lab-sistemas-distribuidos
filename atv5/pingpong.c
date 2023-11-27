@@ -11,6 +11,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+// mpicc pingpong.c -o ping && mpirun -np 2 ./ping
+
 int main(int argc, char** argv) {
   const int PING_PONG_LIMIT = 10;
 

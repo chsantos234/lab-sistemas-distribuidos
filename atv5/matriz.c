@@ -19,7 +19,7 @@ int main(int argc, char** argv){
     }
 
     // ordem e inicialização da matriz
-    int m_order = 100;
+    int m_order = 500;
 
     int A[m_order][m_order];
     int B[m_order][m_order];
@@ -57,7 +57,6 @@ int main(int argc, char** argv){
                 MPI_Recv(&C[i][j], 1, MPI_INT, 3, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
             }
         }
-
     }
     // soma lado direito de cima e envia resultado
     if(world_rank == 1){
@@ -106,12 +105,13 @@ int main(int argc, char** argv){
         }
     }
     // print do resultado final do processo 0:
-    if(world_rank == 0){
+    if(world_rank == 0 && m_order <= 50){
         for (int i = 0; i < m_order; i++){
+            printf("[ ");
             for (int j = 0; j < m_order; j++){
                 printf("%d ", C[i][j]);
             }
-            printf("\n");
+            printf("]\n");
         }
     }
     MPI_Finalize();
